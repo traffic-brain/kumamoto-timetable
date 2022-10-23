@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import Select from 'react-select'
 import * as Urql from 'urql'
+import { useReactToPrint } from 'react-to-print'
+
 import { accessTarget } from './access_target'
 
-import { Language, NormalizeType, useNormalizedStopsQuery } from './graphql/generated/graphql'
+import { Language, NormalizeType, useNormalizedStopsQuery } from '../graphql/generated/graphql'
 import { Timetable } from './timetable'
 
 export interface ColourOption {
@@ -13,6 +15,11 @@ export interface ColourOption {
 }
 
 function App() {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   const [fromSearchName, setFromSearchName] = useState('')
   const [selectedFrom, setSelectedFromKey] = useState<{ label: string; value: string[] } | null>(null)
 
@@ -67,19 +74,15 @@ function App() {
       {
         selectedFrom && selectedTo &&
         <>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
-            <div>{selectedFrom.label} → {selectedTo.label}</div>
-            <div>※乗車する時間帯や経路によって乗車時間が異なる場合がございます。</div>
-          </div>
-          <div style={{
-            display: 'flex',
-          }}>
-
+          <button onClick={handlePrint}>印刷する</button>
+          <div ref={componentRef} className='timetable'>
+            <div className='timetable_header'>
+              <div className='timetable_header_route_name'>{selectedFrom.label} → {selectedTo.label}</div>
+              <div className='timetable_header_warning'>※乗車する時間帯や経路によって乗車時間が異なる場合がございます。</div>
+            </div>
             <div style={{
-              border: '1px solid #000',
+              width: '100%',
+              display: 'flex',
             }}>
               <Timetable fromStopUids={selectedFrom.value} toStopUids={selectedTo.value} hour />
             </div>

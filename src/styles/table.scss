@@ -1,0 +1,90 @@
+$border_size: 2.6pt;
+$hourSize: 15pt;
+
+.table {
+  width: inherit;
+
+  border: $border_size solid #000;
+
+  .table_header {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border-bottom: $border_size solid #000;
+
+    .table_header_hour {
+      padding: 0 6pt;
+
+      font-size: $hourSize;
+    }
+
+    .table_header_col_wrap {
+      display: flex;
+
+      width: 100%;
+
+      .table_header_col {
+        border-left: $border_size solid #000;
+
+        width: 34%;
+      }
+    }
+  }
+
+  .hour_group {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom: $border_size solid #000;
+
+    &:last-child {
+      border-bottom: unset;
+    }
+
+    .hour {
+      padding: 0 4pt;
+      font-size: $hourSize;
+    }
+
+    .minutes_group {
+      height: fit-content;
+
+      width: 100%;
+      display: flex;
+
+      .minutes {
+        border-left: $border_size solid #000;
+
+        width: 33.33%;
+        padding: 5pt;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10pt;
+
+        align-content: flex-start;
+
+        &:empty {
+          gap: unset;
+        }
+
+        .minute_wrap {
+          width: 44pt;
+
+          .minute {
+            font-size: 16pt;
+            text-align: center;
+
+            .route_id {
+              display: flex;
+              justify-content: center;
+              gap: 6pt;
+              margin-top: -5pt;
+            }
+          }
+        }
+      }
+    }
+  }
+}

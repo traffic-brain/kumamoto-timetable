@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useMemo } from "react";
 import { match } from 'ts-pattern'
 
-import { useTimetableForBetweenStopsQuery } from "./graphql/generated/graphql";
+import { useTimetableForBetweenStopsQuery } from "../graphql/generated/graphql";
 
 function nextDay(x: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
   var now = new Date();
@@ -48,7 +48,7 @@ function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[
       hour: Number(stopTime.departure.time.split(':')[0]),
       minute: Number(stopTime.departure.time.split(':')[1])
     },
-    routeIds: stopTime.route.longName!.split('：')[0].split('／')
+    routeIds: stopTime.route.longName!.split('：')[0].split('/')
   }
 }
 
@@ -78,6 +78,13 @@ function timetableArray(rows: ReturnType<typeof transform>[]) {
 }
 
 export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUids: string[] }) {
+  const propsLastChangedAt = useRef<number>(0);
+  const timetableLastChangedAt = useRef<number>(0);
+
+  useEffect(() => {
+    propsLastChangedAt.current = new Date().valueOf();
+  }, [props]);
+
   const [monday] = useTimetableForBetweenStopsQuery({
     variables: {
       where: {
@@ -150,9 +157,13 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
     return result
   }, [monday.data, saturday.data, sunday.data])
 
-  if (timetables === null) return (
+  useEffect(() => {
+    timetableLastChangedAt.current = new Date().valueOf();
+  }, [timetables]);
+
+  if (timetables === null || timetableLastChangedAt.current < propsLastChangedAt.current) return (
     <div>
-      時刻表生成中です... しばらくお待ち下さい
+      時刻表を生成中です... しばらくお待ち下さい
     </div>
   )
 
@@ -162,81 +173,35 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
     </div>
   )
 
-  return <>
-    <div style={{
-      display: 'flex',
-      alignContent: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
-      borderBottom: '1px solid #000',
-    }}>
-      <div style={{
-        fontSize: '15pt',
-        padding: '0 6pt',
-      }}>時</div>
+  return <div className="table">
+    <div className="table_header">
+      <div className="table_header_hour">時</div>
 
-      <div style={{
-        display: 'flex',
-      }}>
-        <div style={{
-          borderLeft: '1px solid #000',
-          width: '32vw',
-        }}>
+      <div className="table_header_col_wrap">
+        <div className="table_header_col">
           平日（{generateDateFormat(nextDay(1), '/')}）
         </div>
-        <div style={{
-          borderLeft: '1px solid #000',
-          width: '32vw',
-        }}>
+        <div className="table_header_col">
           土曜（{generateDateFormat(nextDay(6), '/')}）
         </div>
-        <div style={{
-          borderLeft: '1px solid #000',
-          width: '32vw',
-        }}>
+        <div className="table_header_col">
           日祝（{generateDateFormat(nextDay(0), '/')}）
         </div>
       </div>
     </div>
     {timetables.map(([hour, timetable]) => <>
-      <div style={{
-        display: 'flex',
-        alignContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        borderBottom: '1px solid #000',
-      }}>
-        <div style={{
-          fontSize: '15pt',
-          padding: '0 4pt',
-        }}>{String(hour).padStart(2, '0')}</div>
+      <div className="hour_group">
+        <div className="hour">{String(hour).padStart(2, '0')}</div>
 
-        <div style={{
-          display: 'flex',
-          height: 'fit-content',
-        }}>
+        <div className="minutes_group">
           {timetable.map((minutes, i) =>
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignContent: 'flex-start',
-              gap: '10pt',
-              width: '32vw',
-              borderLeft: '1px solid #000',
+            <div className="minutes" style={{
               backgroundColor: i === 0 ? '#efefef' : i === 1 ? '#d4ebff' : '#ffcee6'
             }}>
               {minutes.map((minute) =>
-                <div key={minute.uid} style={{
-                  width: 'fit-content',
-                  padding: '5pt',
-                }}>
-                  <div style={{ fontSize: '16pt', textAlign: 'center' }}>{String(minute.departure.minute).padStart(2, '0')}</div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '6pt',
-                    marginTop: '-5pt',
-                  }}>{minute.routeIds.map(routeId => <span style={{ fontSize: '3pt' }}>{routeId}</span>)}</div>
+                <div key={minute.uid} className="minute_wrap">
+                  <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
+                  <div className="route_id"><div style={{ fontSize: '3pt' }}>{minute.routeIds.join('/')}</div></div>
                 </div>
               )}
             </div>
@@ -244,5 +209,5 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
         </div>
       </div>
     </>)}
-  </>
+  </div>
 }
