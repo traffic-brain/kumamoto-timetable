@@ -1,3 +1,21 @@
 * {
   box-sizing: border-box;
 }
+
+.controller {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 6px;
+
+  .fromName {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  .toName {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .print {
+    grid-area: 1 / 2 / 3 / 3;
+  }
+}

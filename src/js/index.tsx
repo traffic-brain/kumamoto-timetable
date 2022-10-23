@@ -55,26 +55,30 @@ function App() {
 
   return (
     <>
-      <Select
-        options={(fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-        onInputChange={v => setFromSearchName(v)}
-        onChange={(selectedOption) => {
-          setSelectedFromKey(selectedOption)
-        }}
-        placeholder='出発地'
-      />
-      <Select
-        options={(toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-        onInputChange={v => setToSearchName(v)}
-        onChange={(selectedOption) => {
-          setSelectedToKey(selectedOption)
-        }}
-        placeholder='停車地'
-      />
+      <div className='controller'>
+        <Select
+          className='fromName'
+          options={(fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
+          onInputChange={v => setFromSearchName(v)}
+          onChange={(selectedOption) => {
+            setSelectedFromKey(selectedOption)
+          }}
+          placeholder='出発地'
+        />
+        <Select
+          className='toName'
+          options={(toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
+          onInputChange={v => setToSearchName(v)}
+          onChange={(selectedOption) => {
+            setSelectedToKey(selectedOption)
+          }}
+          placeholder='停車地'
+        />
+        <button className='print' onClick={handlePrint}>印刷する</button>
+      </div>
       {
         selectedFrom && selectedTo &&
         <>
-          <button onClick={handlePrint}>印刷する</button>
           <div ref={componentRef} className='timetable'>
             <div className='timetable_header'>
               <div className='timetable_header_route_name'>{selectedFrom.label} → {selectedTo.label}</div>
