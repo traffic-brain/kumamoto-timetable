@@ -56,6 +56,7 @@ $hourSize: 15pt;
       .minutes {
         border-left: $border_size solid #000;
 
+        min-height: 60px;
         width: 33.33%;
         padding: 5pt;
 

@@ -44,6 +44,7 @@ query TimetableForBetweenStops($where: TimetableForBetweenStopsSearch!) {
       a_departure: departure {
         time
       }
+      headsign
       route {
         longName
         uid
@@ -54,6 +55,7 @@ query TimetableForBetweenStops($where: TimetableForBetweenStopsSearch!) {
       d_departure: departure {
         time
       }
+      headsign
       route {
         longName
         uid
@@ -64,6 +66,7 @@ query TimetableForBetweenStops($where: TimetableForBetweenStopsSearch!) {
       departure {
         time
       }
+      headsign
       route {
         longName
         uid

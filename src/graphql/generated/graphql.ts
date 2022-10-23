@@ -130,7 +130,6 @@ export type Query = {
   normalizedStops: Array<NormalizedStopInfo>;
   remotes: RemotePagination;
   stops: Array<StopUnion>;
-  timetableForBetweenNormalizedStops: Array<Array<StopTimeUnion>>;
   timetableForBetweenStops: Array<Array<StopTimeUnion>>;
 };
 
@@ -150,11 +149,6 @@ export type QueryRemotesArgs = {
 export type QueryStopsArgs = {
   pagination?: InputMaybe<StopPagination>;
   where: StopSearch;
-};
-
-
-export type QueryTimetableForBetweenNormalizedStopsArgs = {
-  where: TimetableForBetweenNormalizedStopsSearch;
 };
 
 
@@ -281,11 +275,6 @@ export type Time = {
   time: Scalars['String'];
 };
 
-export type TimetableForBetweenNormalizedStopsSearch = {
-  date: Scalars['String'];
-  transitNormalizedStopUids: Array<Array<Scalars['String']>>;
-};
-
 export type TimetableForBetweenStopsSearch = {
   date: Scalars['String'];
   transitStopUids: Array<Array<Scalars['String']>>;
@@ -380,7 +369,7 @@ export type TimetableForBetweenStopsQueryVariables = Exact<{
 }>;
 
 
-export type TimetableForBetweenStopsQuery = { __typename?: 'Query', timetableForBetweenStops: Array<Array<{ __typename?: 'StopTimeArrivalInfo', uid: string, a_departure?: { __typename?: 'Time', time: string } | null, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } } | { __typename?: 'StopTimeDepartureInfo', uid: string, d_departure: { __typename?: 'Time', time: string }, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } } | { __typename?: 'StopTimeInfo', uid: string, departure: { __typename?: 'Time', time: string }, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } }>> };
+export type TimetableForBetweenStopsQuery = { __typename?: 'Query', timetableForBetweenStops: Array<Array<{ __typename?: 'StopTimeArrivalInfo', headsign?: string | null, uid: string, a_departure?: { __typename?: 'Time', time: string } | null, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } } | { __typename?: 'StopTimeDepartureInfo', headsign?: string | null, uid: string, d_departure: { __typename?: 'Time', time: string }, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } } | { __typename?: 'StopTimeInfo', headsign?: string | null, uid: string, departure: { __typename?: 'Time', time: string }, route: { __typename?: 'RouteInfo', longName?: string | null, uid: string } }>> };
 
 
 export const RemotesDocument = gql`
@@ -439,6 +428,7 @@ export const TimetableForBetweenStopsDocument = gql`
       a_departure: departure {
         time
       }
+      headsign
       route {
         longName
         uid
@@ -449,6 +439,7 @@ export const TimetableForBetweenStopsDocument = gql`
       d_departure: departure {
         time
       }
+      headsign
       route {
         longName
         uid
@@ -459,6 +450,7 @@ export const TimetableForBetweenStopsDocument = gql`
       departure {
         time
       }
+      headsign
       route {
         longName
         uid

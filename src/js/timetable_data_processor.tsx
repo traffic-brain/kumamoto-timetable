@@ -28,19 +28,25 @@ function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[
     .with({ __typename: 'StopTimeArrivalInfo' }, stopTime => ({
       uid: stopTime.uid,
       departure: stopTime.a_departure,
-      route: stopTime.route
+      route: stopTime.route,
+      headsign: stopTime.headsign,
     }))
     .with({ __typename: 'StopTimeDepartureInfo' }, stopTime => ({
       uid: stopTime.uid,
       departure: stopTime.d_departure,
-      route: stopTime.route
+      route: stopTime.route,
+      headsign: stopTime.headsign,
     }))
     .with({ __typename: 'StopTimeInfo' }, stopTime => ({
       uid: stopTime.uid,
       departure: stopTime.departure,
-      route: stopTime.route
+      route: stopTime.route,
+      headsign: stopTime.headsign,
     }))
     .run()
+
+  const routeName = stopTime.route.longName!
+  const routeIds = routeName.includes('：') ? routeName.split('：')[0].split('/') : [stopTime.headsign.slice(0,4)]
 
   return {
     uid: stopTime.uid,
@@ -48,7 +54,7 @@ function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[
       hour: Number(stopTime.departure.time.split(':')[0]),
       minute: Number(stopTime.departure.time.split(':')[1])
     },
-    routeIds: stopTime.route.longName!.split('：')[0].split('/')
+    routeIds: routeIds
   }
 }
 
