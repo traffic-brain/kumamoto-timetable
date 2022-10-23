@@ -74,7 +74,7 @@ function App() {
           }}
           placeholder='停車地'
         />
-        <button className='print' onClick={handlePrint}>印刷する</button>
+        <button className='print' disabled={selectedFrom === null || selectedTo === null} onClick={handlePrint}>印刷する</button>
       </div>
       {
         selectedFrom && selectedTo &&
