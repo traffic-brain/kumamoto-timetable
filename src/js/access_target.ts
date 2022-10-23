@@ -25,4 +25,4 @@ const accessTargets = {
   }
 }
 
-export const accessTarget = accessTargets['develop']
+export const accessTarget = accessTargets['prod']
