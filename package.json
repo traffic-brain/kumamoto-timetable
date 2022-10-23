@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "parcel src/index.html",
     "build": "parcel build src/index.html --public-url ./",
-    "graphql:codegen": "graphql-codegen --config codegen.ts"
+    "graphql:codegen": "graphql-codegen --config codegen.ts",
+    "publish": "git subtree push -P dist origin gh-pages"
   },
   "dependencies": {
     "@graphql-codegen/typescript-urql": "^3.7.1",
