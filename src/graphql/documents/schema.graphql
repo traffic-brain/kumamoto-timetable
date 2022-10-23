@@ -1,0 +1,74 @@
+
+query Remotes($where: RemoteSearch!, $pagination: RemotePaginationOptions, $versionsWhere: VersionSearch!, $versionsPagination: VersionPaginationOptions, $order: VersionOrder) {
+  remotes(where: $where, pagination: $pagination) {
+    totalCount
+    edges {
+      uid
+      name
+      versions(where: $versionsWhere, pagination: $versionsPagination, order: $order) {
+        totalCount
+        edges {
+          ... on VersionErrorInfo {
+            uid
+            created_at
+            import_error_status: import_status
+            import_error_code
+          }
+          ... on VersionInfo {
+            uid
+            created_at
+            import_status
+          }
+        }
+      }
+    }
+  }
+}
+
+query NormalizedStops($where: NormalizedStopSearch!, $pagination: NormalizedStopPagination) {
+  normalizedStops(where: $where, pagination: $pagination) {
+    key
+    stops {
+      ... on StopInfo {
+        uid
+        id
+        name
+      }
+    }
+  }
+}
+
+query TimetableForBetweenStops($where: TimetableForBetweenStopsSearch!) {
+  timetableForBetweenStops(where: $where) {
+    ... on StopTimeArrivalInfo {
+      a_departure: departure {
+        time
+      }
+      route {
+        longName
+        uid
+      }
+      uid
+    }
+    ... on StopTimeDepartureInfo {
+      d_departure: departure {
+        time
+      }
+      route {
+        longName
+        uid
+      }
+      uid
+    }
+    ... on StopTimeInfo {
+      departure {
+        time
+      }
+      route {
+        longName
+        uid
+      }
+      uid
+    }
+  }
+}
