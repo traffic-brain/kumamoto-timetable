@@ -1,5 +1,6 @@
-$border_size: 2.6pt;
-$hourSize: 15pt;
+$border_size: 1.2pt;
+$hourSize: 16pt;
+$hour_width: 30pt;
 
 .table {
   width: inherit;
@@ -14,7 +15,7 @@ $hourSize: 15pt;
 
     .table_header_hour {
       padding: 0 6pt;
-
+      width: $hour_width;
       font-size: $hourSize;
     }
 
@@ -25,8 +26,8 @@ $hourSize: 15pt;
 
       .table_header_col {
         border-left: $border_size solid #000;
-
-        width: 34%;
+        font-size: 15pt;
+        width: 33.33%;
       }
     }
   }
@@ -45,6 +46,8 @@ $hourSize: 15pt;
     .hour {
       padding: 0 4pt;
       font-size: $hourSize;
+      font-weight: bold;
+      width: $hour_width;
     }
 
     .minutes_group {
@@ -56,13 +59,13 @@ $hourSize: 15pt;
       .minutes {
         border-left: $border_size solid #000;
 
-        min-height: 60px;
+        min-height: 30pt;
         width: 33.33%;
-        padding: 5pt;
+        padding: 2pt;
 
         display: flex;
         flex-wrap: wrap;
-        gap: 10pt;
+        gap: 2pt 0pt;
 
         align-content: flex-start;
 
@@ -76,13 +79,13 @@ $hourSize: 15pt;
           .minute {
             font-size: 16pt;
             text-align: center;
+            font-weight: bold;
+          }
 
-            .route_id {
-              display: flex;
-              justify-content: center;
-              gap: 6pt;
-              margin-top: -5pt;
-            }
+          .route_id {
+            display: flex;
+            justify-content: center;
+            margin-top: -4pt;
           }
         }
       }
