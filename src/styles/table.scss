@@ -2,6 +2,10 @@ $border_size: 1.2pt;
 $hourSize: 16pt;
 $hour_width: 30pt;
 
+$weekday_width: 35%;
+$saturday_width: 35%;
+$sunday_width: 30%;
+
 .table {
   width: inherit;
 
@@ -27,7 +31,26 @@ $hour_width: 30pt;
       .table_header_col {
         border-left: $border_size solid #000;
         font-size: 15pt;
-        width: 33.33%;
+
+        .day_name {
+          font-weight: bold;
+        }
+
+        .day {
+          font-size: 11pt;
+        }
+
+        &.weekday {
+          width: $weekday_width;
+        }
+
+        &.saturday {
+          width: $saturday_width;
+        }
+
+        &.sunday {
+          width: $sunday_width;
+        }
       }
     }
   }
@@ -60,7 +83,7 @@ $hour_width: 30pt;
         border-left: $border_size solid #000;
 
         min-height: 30pt;
-        width: 33.33%;
+
         padding: 2pt;
 
         display: flex;
@@ -71,6 +94,42 @@ $hour_width: 30pt;
 
         &:empty {
           gap: unset;
+        }
+
+        &.weekday {
+          width: $weekday_width;
+
+          &_0 {
+            background-color: #efefef;
+          }
+
+          &_1 {
+            background-color: #dcdcdc;
+          }
+        }
+
+        &.saturday {
+          width: $saturday_width;
+
+          &_0 {
+            background-color: #d4ebff;
+          }
+
+          &_1 {
+            background-color: #bce1ff;
+          }
+        }
+
+        &.sunday {
+          width: $sunday_width;
+
+          &_0 {
+            background-color: #ffcee6;
+          }
+
+          &_1 {
+            background-color: #feb5d8;
+          }
         }
 
         .minute_wrap {

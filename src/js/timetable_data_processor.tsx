@@ -46,7 +46,7 @@ function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[
     .run()
 
   const routeName = stopTime.route.longName!
-  const routeIds = routeName.includes('：') ? routeName.split('：')[0].split('/') : [stopTime.headsign.slice(0,4)]
+  const routeIds = routeName.includes('：') ? routeName.split('：')[0].split('/') : [stopTime.headsign.slice(0, 4)]
 
   return {
     uid: stopTime.uid,
@@ -184,26 +184,25 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
       <div className="table_header_hour">時</div>
 
       <div className="table_header_col_wrap">
-        <div className="table_header_col">
-          平日（{generateDateFormat(nextDay(1), '/')}）
+        <div className="table_header_col weekday">
+          <span className="day_name">平日</span><span className="day">（{generateDateFormat(nextDay(1), '/')}）</span>
         </div>
-        <div className="table_header_col">
-          土曜（{generateDateFormat(nextDay(6), '/')}）
+        <div className="table_header_col saturday">
+          <span className="day_name">土曜</span><span className="day">（{generateDateFormat(nextDay(6), '/')}）</span>
         </div>
-        <div className="table_header_col">
-          日祝（{generateDateFormat(nextDay(0), '/')}）
+        <div className="table_header_col sunday">
+          <span className="day_name">日祝</span><span className="day">（{generateDateFormat(nextDay(0), '/')}）</span>
         </div>
       </div>
     </div>
-    {timetables.map(([hour, timetable]) => <>
+    {timetables.map(([hour, timetable], hourIndex) => <>
       <div className="hour_group">
         <div className="hour">{String(hour).padStart(2, '0')}</div>
 
         <div className="minutes_group">
-          {timetable.map((minutes, i) =>
-            <div className="minutes" style={{
-              backgroundColor: i === 0 ? '#efefef' : i === 1 ? '#d4ebff' : '#ffcee6'
-            }}>
+          {timetable.map((minutes, i) => {
+            const dayName = i === 0 ? 'weekday' : i === 1 ? 'saturday' : 'sunday'
+            return <div className={`minutes ${dayName} ${dayName}_${hourIndex % 2}`}>
               {minutes.map((minute) =>
                 <div key={minute.uid} className="minute_wrap">
                   <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
@@ -211,7 +210,7 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
                 </div>
               )}
             </div>
-          )}
+          })}
         </div>
       </div>
     </>)}
