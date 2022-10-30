@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { match } from 'ts-pattern'
 
 import { useTimetableForBetweenStopsQuery } from "../graphql/generated/graphql";
+import { timeStringToSeconds } from "./utils";
 
 function nextDay(x: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
   var now = new Date();
@@ -117,14 +118,13 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
   })
 
   const timetables = useMemo(() => {
-    console.log(monday.data, saturday.data, sunday.data)
     if (!monday.data || !saturday.data || !sunday.data) return null
 
-    const mondayRows = timetableArray((monday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[]
-    const saturdayRows = timetableArray((saturday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[]
-    const sundayRows = timetableArray((sunday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[]
-
-    const data = [mondayRows, saturdayRows, sundayRows]
+    const data = [
+      timetableArray((monday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
+      timetableArray((saturday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
+      timetableArray((sunday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
+    ]
 
     let minHour = 23
     data.forEach(data => {
@@ -153,7 +153,6 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
         data.push([data[data.length - 1][0] + i + 1, []])
       }
     })
-    console.log(data)
     if (data[0].length !== data[1].length || data[1].length !== data[2].length) return []
 
     const result: [number, [TimeTableData[1], TimeTableData[1], TimeTableData[1]]][] = []
@@ -161,6 +160,32 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
       result.push([data[0][i][0], [data[0][i][1], data[1][i][1], data[2][i][1]]])
     ])
     return result
+  }, [monday.data, saturday.data, sunday.data])
+
+  const moveTime = useMemo(() => {
+    if (!monday.data || !saturday.data || !sunday.data) return null
+
+    let moveMinSeconds = Number.MAX_SAFE_INTEGER;
+    let moveMaxSeconds = 0;
+    [
+      ...(monday.data?.timetableForBetweenStops ?? []),
+      ...(saturday.data?.timetableForBetweenStops ?? []),
+      ...(sunday.data?.timetableForBetweenStops ?? [])
+    ].forEach(([from, to]) => {
+      const fromData = transform(from)
+      const toData = transform(to)
+
+      const moveTime = timeStringToSeconds(`${toData.departure.hour}:${toData.departure.minute}:00`) - timeStringToSeconds(`${fromData.departure.hour}:${fromData.departure.minute}:00`)
+
+      if (moveTime < moveMinSeconds) moveMinSeconds = moveTime
+      if (moveMaxSeconds < moveTime) moveMaxSeconds = moveTime
+    })
+    console.log(`乗車時間 約${moveMinSeconds / 60}分〜約${moveMaxSeconds / 60}分`)
+
+    return {
+      min: moveMinSeconds,
+      max: moveMaxSeconds
+    }
   }, [monday.data, saturday.data, sunday.data])
 
   useEffect(() => {
@@ -214,5 +239,8 @@ export function TimetableDataProcessor(props: { fromStopUids: string[]; toStopUi
         </div>
       </div>
     </>)}
+    <div className="timetable_footer">
+      乗車時間：{moveTime.min / 60}分 〜 {moveTime.max / 60}分（交通状況などにより前後する場合がございます。）
+    </div>
   </div>
 }
