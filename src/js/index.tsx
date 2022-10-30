@@ -31,7 +31,7 @@ function App() {
       where: {
         remoteVersionUids: accessTarget.remoteUids,
         type: NormalizeType.Id,
-        languages: [Language.En, Language.Ja],
+        languages: [Language.Ja, Language.En],
         name: fromSearchName,
       },
       pagination: {
@@ -44,7 +44,7 @@ function App() {
       where: {
         remoteVersionUids: accessTarget.remoteUids,
         type: NormalizeType.Id,
-        languages: [Language.En, Language.Ja],
+        languages: [Language.Ja, Language.En],
         name: toSearchName,
       },
       pagination: {
@@ -58,6 +58,7 @@ function App() {
       <div className='controller'>
         <Select
           className='fromName'
+          filterOption={null}
           options={(fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
           onInputChange={v => setFromSearchName(v)}
           onChange={(selectedOption) => {
@@ -67,6 +68,7 @@ function App() {
         />
         <Select
           className='toName'
+          filterOption={null}
           options={(toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
           onInputChange={v => setToSearchName(v)}
           onChange={(selectedOption) => {
