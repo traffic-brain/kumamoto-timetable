@@ -18,10 +18,10 @@ const accessTargets = {
       accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiJPWWFKSUlPQWVuLVNnT0ZTM0MxLUoiLCJ0b2tlbiI6IkxuejdPdVRCbXNTdk00NXhnUlQyTSIsImlhdCI6MTY2NzExMTkxM30.haHaEYhyneClNRYC8XwvWAULsr1McIHJSqwcdlb3XOQ',
     },
     remoteUids: [
-      '0Ra9ZMzKPxdKXv_tYpycC',
-      '-7EFPQeEQbBaUq81BbC-w',
-      'Q7eV-vq5sY3RqE8x2QRyr',
-      'aZ3P2HQug_74nC08JZ98J',
+      'spmtfpCLMHX90MM7xnhtu',
+      'JcxG9RikQzXzu0zccQmHJ',
+      'tNF5k_mA6Z9JuC6u-TF45',
+      'Dq-4U8eKuThPQWXQL744p',
     ]
   }
 }
