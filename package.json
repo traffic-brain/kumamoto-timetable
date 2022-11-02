@@ -26,5 +26,9 @@
     "@graphql-codegen/client-preset": "1.0.7",
     "sass": "^1.55.0",
     "typescript": "^4.8.4"
+  },
+  "volta": {
+    "node": "18.12.0",
+    "npm": "8.19.2"
   }
 }
