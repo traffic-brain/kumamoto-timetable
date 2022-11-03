@@ -7,7 +7,7 @@ import { useReactToPrint } from 'react-to-print'
 import { accessTarget } from './access_target'
 
 import { ImportStatus, Language, NormalizeType, Order, useNormalizedStopsQuery, useRemotesQuery, VersionOrderColumn } from '../graphql/generated/graphql'
-import { Timetable } from './timetable'
+import { TimetableTable } from './timetable'
 
 export interface ColourOption {
   readonly value: string;
@@ -100,20 +100,9 @@ function App() {
       </div>
       {
         selectedFrom && selectedTo &&
-        <>
-          <div ref={componentRef} className='timetable'>
-            <div className='timetable_header'>
-              <div className='timetable_header_route_name'>{selectedFrom.label} → {selectedTo.label}</div>
-              <div className='timetable_header_warning'>※乗車する時間帯や経路によって乗車時間が異なる場合がございます。</div>
-            </div>
-            <div style={{
-              width: '100%',
-              display: 'flex',
-            }}>
-              <Timetable fromStopUids={selectedFrom.value} toStopUids={selectedTo.value} hour />
-            </div>
-          </div>
-        </>
+        <div ref={componentRef} >
+          <TimetableTable fromStop={{ label: selectedFrom.label, uids: selectedFrom.value }} toStop={{ label: selectedTo.label, uids: selectedTo.value }} />
+        </div>
       }
     </>
   )

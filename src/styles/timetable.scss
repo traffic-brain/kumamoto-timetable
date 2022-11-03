@@ -14,8 +14,13 @@
       font-weight: bold;
     }
 
-    .timetable_header_warning {
+    .timetable_header_description {
       line-height: 260%;
+
+      .timetable_header_description_minutes {
+        font-weight:bold;
+        font-size:16pt;
+      }
     }
   }
 
