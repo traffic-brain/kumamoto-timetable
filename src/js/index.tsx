@@ -6,7 +6,7 @@ import { useReactToPrint } from 'react-to-print'
 
 import { accessTarget } from './access_target'
 
-import { Language, NormalizeType, useNormalizedStopsQuery } from '../graphql/generated/graphql'
+import { ImportStatus, Language, NormalizeType, Order, useNormalizedStopsQuery, useRemotesQuery, VersionOrderColumn } from '../graphql/generated/graphql'
 import { Timetable } from './timetable'
 
 export interface ColourOption {
@@ -26,10 +26,30 @@ function App() {
   const [toSearchName, setToSearchName] = useState('')
   const [selectedTo, setSelectedToKey] = useState<{ label: string; value: string[] } | null>(null)
 
+  const [remotes] = useRemotesQuery({
+    variables: {
+      where: {
+        remoteUids: accessTarget.remoteUids
+      },
+      versionsWhere: {
+        status: [ImportStatus.Imported]
+      },
+      versionsPagination: {
+        offset: 0,
+        limit: 1
+      },
+      versionOrder: {
+        column: VersionOrderColumn.CreatedAt,
+        order: Order.Desc
+      }
+    }
+  })
+  const remoteUids = useMemo(() => remotes.data?.remotes.edges.map(remote => remote.versions.edges[0].uid) ?? [], [remotes.data])
+
   const [fromNormalizedStops] = useNormalizedStopsQuery({
     variables: {
       where: {
-        remoteVersionUids: accessTarget.remoteUids,
+        remoteVersionUids: remoteUids,
         type: NormalizeType.Id,
         languages: [Language.Ja, Language.En],
         name: fromSearchName,
@@ -42,7 +62,7 @@ function App() {
   const [toNormalizedStops] = useNormalizedStopsQuery({
     variables: {
       where: {
-        remoteVersionUids: accessTarget.remoteUids,
+        remoteVersionUids: remoteUids,
         type: NormalizeType.Id,
         languages: [Language.Ja, Language.En],
         name: toSearchName,

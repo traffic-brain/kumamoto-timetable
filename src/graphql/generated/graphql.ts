@@ -167,7 +167,7 @@ export type RemoteInfo = {
 export type RemoteInfoVersionsArgs = {
   order?: InputMaybe<VersionOrder>;
   pagination?: InputMaybe<VersionPaginationOptions>;
-  where: VersionSearch;
+  where?: InputMaybe<VersionSearch>;
 };
 
 export type RemotePagination = {
@@ -183,6 +183,7 @@ export type RemotePaginationOptions = {
 
 export type RemoteSearch = {
   name?: InputMaybe<Scalars['String']>;
+  remoteUids?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type RouteInfo = {
@@ -350,11 +351,11 @@ export type RemotesQueryVariables = Exact<{
   pagination?: InputMaybe<RemotePaginationOptions>;
   versionsWhere: VersionSearch;
   versionsPagination?: InputMaybe<VersionPaginationOptions>;
-  order?: InputMaybe<VersionOrder>;
+  versionOrder?: InputMaybe<VersionOrder>;
 }>;
 
 
-export type RemotesQuery = { __typename?: 'Query', remotes: { __typename?: 'RemotePagination', totalCount: number, edges: Array<{ __typename?: 'RemoteInfo', uid: string, name: string, versions: { __typename?: 'VersionPagination', totalCount: number, edges: Array<{ __typename?: 'VersionErrorInfo', uid: string, created_at: string, import_error_code: ImportErrorCode, import_error_status: ImportErrorStatus } | { __typename?: 'VersionInfo', uid: string, created_at: string, import_status: ImportSuccessStatus }> } }> } };
+export type RemotesQuery = { __typename?: 'Query', remotes: { __typename?: 'RemotePagination', edges: Array<{ __typename?: 'RemoteInfo', versions: { __typename?: 'VersionPagination', edges: Array<{ __typename?: 'VersionErrorInfo', uid: string } | { __typename?: 'VersionInfo', uid: string }> } }> } };
 
 export type NormalizedStopsQueryVariables = Exact<{
   where: NormalizedStopSearch;
@@ -373,25 +374,20 @@ export type TimetableForBetweenStopsQuery = { __typename?: 'Query', timetableFor
 
 
 export const RemotesDocument = gql`
-    query Remotes($where: RemoteSearch!, $pagination: RemotePaginationOptions, $versionsWhere: VersionSearch!, $versionsPagination: VersionPaginationOptions, $order: VersionOrder) {
+    query Remotes($where: RemoteSearch!, $pagination: RemotePaginationOptions, $versionsWhere: VersionSearch!, $versionsPagination: VersionPaginationOptions, $versionOrder: VersionOrder) {
   remotes(where: $where, pagination: $pagination) {
-    totalCount
     edges {
-      uid
-      name
-      versions(where: $versionsWhere, pagination: $versionsPagination, order: $order) {
-        totalCount
+      versions(
+        where: $versionsWhere
+        pagination: $versionsPagination
+        order: $versionOrder
+      ) {
         edges {
           ... on VersionErrorInfo {
             uid
-            created_at
-            import_error_status: import_status
-            import_error_code
           }
           ... on VersionInfo {
             uid
-            created_at
-            import_status
           }
         }
       }

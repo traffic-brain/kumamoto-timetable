@@ -1,15 +1,14 @@
 const accessTargets = {
-  develop: {
+  dev: {
     medas: {
-      url: 'http://localhost:3000/graphql',
-      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiI5d2Z2c3BxUGJrMktIeURUTUZzekMiLCJ0b2tlbiI6IjFfdW50MElmZF9zdE4xN1hqamQ3TiIsImlhdCI6MTY2Njk3MjY2NH0._JX8XeM9I8khY_1wdx544FAuLE228U8v4wesmbPnMnU',
+      url: 'http://localhost:3000/v1/graphql',
+      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiJpVi1qcW4yQ0ZQb1Z3am9oWHVjODMiLCJ0b2tlbiI6ImxHZVQ5VlQxWWpZeVdmbFc5UWhteiIsImlhdCI6MTY2NzQwNjM4OH0.MFYVPU45id64WDRidkynTA87k5jxb6-BgQV7eDFpiNY',
     },
     remoteUids: [
-      "v0Wgb4slostqTmxfq7mWc",
-      "k0jekEyTT3-PWjJ9t4fN8",
-      "8CrK0at6O-Wg-XT5qgLts",
-      "-pwd-uGrjGaBaNZ_fOxua",
-      "yv3M5vVIBaH4irKk2nZBu"
+      'jHCEK7BU2AtQ7tEiFIvNl',
+      'Ccbxg6MMp2Opj5IwHBtga',
+      'ocG3Giv5Z9C2TNeLLjZ_9',
+      'y90bXyuVcz6-xsBoPaWg0',
     ]
   },
   prod: {
@@ -18,10 +17,10 @@ const accessTargets = {
       accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiJPWWFKSUlPQWVuLVNnT0ZTM0MxLUoiLCJ0b2tlbiI6IkxuejdPdVRCbXNTdk00NXhnUlQyTSIsImlhdCI6MTY2NzExMTkxM30.haHaEYhyneClNRYC8XwvWAULsr1McIHJSqwcdlb3XOQ',
     },
     remoteUids: [
-      'spmtfpCLMHX90MM7xnhtu',
-      'JcxG9RikQzXzu0zccQmHJ',
-      'tNF5k_mA6Z9JuC6u-TF45',
-      'Dq-4U8eKuThPQWXQL744p',
+      'jINOG7YK70vXkwlsgp1YT',
+      '3yM00KPM2aw7PjtF_li1k',
+      'WJQSpdRf1XpAyOQ8RQJGy',
+      'bHxWm3b9Ttz6434y8JWpc',
     ]
   }
 }

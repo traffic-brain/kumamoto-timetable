@@ -1,23 +1,13 @@
-
-query Remotes($where: RemoteSearch!, $pagination: RemotePaginationOptions, $versionsWhere: VersionSearch!, $versionsPagination: VersionPaginationOptions, $order: VersionOrder) {
+query Remotes($where: RemoteSearch!, $pagination: RemotePaginationOptions, $versionsWhere: VersionSearch!, $versionsPagination: VersionPaginationOptions, $versionOrder: VersionOrder) {
   remotes(where: $where, pagination: $pagination) {
-    totalCount
     edges {
-      uid
-      name
-      versions(where: $versionsWhere, pagination: $versionsPagination, order: $order) {
-        totalCount
+      versions(where: $versionsWhere, pagination: $versionsPagination, order: $versionOrder) {
         edges {
           ... on VersionErrorInfo {
             uid
-            created_at
-            import_error_status: import_status
-            import_error_code
           }
           ... on VersionInfo {
             uid
-            created_at
-            import_status
           }
         }
       }
