@@ -211,7 +211,7 @@ export function TimetableTable(props: {
     <div className='timetable'>
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
-        <div className='timetable_header_description'>所要 <span className='timetable_header_description_minutes'>7～16</span> 分（交通状況などにより前後します）</div>
+        <div className='timetable_header_description'>所要 <span className='timetable_header_description_minutes'>{moveTime.min}～{moveTime.max}</span> 分（交通状況などにより前後します）</div>
       </div>
       <div style={{
         width: '100%',
