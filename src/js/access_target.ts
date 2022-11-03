@@ -13,7 +13,7 @@ const accessTargets = {
   },
   prod: {
     medas: {
-      url: 'https://api.medas.cloud/graphql',
+      url: 'https://api.medas.cloud/v1/graphql',
       accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiJPWWFKSUlPQWVuLVNnT0ZTM0MxLUoiLCJ0b2tlbiI6IkxuejdPdVRCbXNTdk00NXhnUlQyTSIsImlhdCI6MTY2NzExMTkxM30.haHaEYhyneClNRYC8XwvWAULsr1McIHJSqwcdlb3XOQ',
     },
     remoteUids: [
