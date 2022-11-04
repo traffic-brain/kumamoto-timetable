@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html --public-url ./",
+    "build:clean": "rimraf dist",
+    "build:static": "parcel build src/index.html --public-url ./",
+    "build": "run-s build:*",
     "graphql:codegen": "graphql-codegen --config codegen.ts",
     "publish": "git subtree push -P dist origin gh-pages"
   },
@@ -24,6 +26,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.7",
     "@graphql-codegen/client-preset": "1.0.7",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
     "sass": "^1.55.0",
     "typescript": "^4.8.4"
   },
