@@ -139,6 +139,12 @@ $sunday_width: 28.57%;
             font-size: 16pt;
             text-align: center;
             font-weight: bold;
+
+            &.long_time {
+              text-decoration: underline;
+              font-weight: 400;
+              color: #666666;
+            }
           }
 
           .route_id {

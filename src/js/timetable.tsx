@@ -213,7 +213,7 @@ export function TimetableTable(props: {
     <div className='timetable'>
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
-        <div className='timetable_header_description'>所要　約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分前後（交通状況などにより前後します）</div>
+        <div className='timetable_header_description'>所要 約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分（経路・時間帯・交通状況により前後します）<br />下線細字：所要時間が長い便です</div>
       </div>
       <div style={{
         width: '100%',
@@ -249,11 +249,11 @@ export function TimetableTable(props: {
                       if (moveCenterTimeSec * 2.0 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 20 <= minute.moveTimeSec) return
 
                       // 中央値×1.5以上 AND 中央値+10以上 → 色づけ　…中央病院、健軍・県庁周りが色づけ
-                      const color = moveCenterTimeSec * 1.5 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 10 <= minute.moveTimeSec ? 'gray' : ''
+                      const minute_style = moveCenterTimeSec * 1.5 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 10 <= minute.moveTimeSec ? 'long_time' : ''
 
                       return (
-                        <div key={minute.uid} className={`minute_wrap ${color}`}>
-                          <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
+                        <div key={minute.uid} className="minute_wrap">
+                          <div className={`minute ${minute_style}`}>{String(minute.departure.minute).padStart(2, '0')}</div>
                           <div className="route_id"><div style={{ fontSize: '3pt' }}>{minute.routeIds.join('/')}</div></div>
                         </div>
                       )
