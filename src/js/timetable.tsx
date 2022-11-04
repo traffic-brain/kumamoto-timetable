@@ -22,10 +22,11 @@ type TimeTableData = [number, {
     minute: number;
   };
   routeIds: string[]
+  moveTimeSec: number
 }[]]
 
-function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[0]['data']['timetableForBetweenStops'][number][number]) {
-  const stopTime = match(transit)
+function stopTimeTransform(stopTime: ReturnType<typeof useTimetableForBetweenStopsQuery>[0]['data']['timetableForBetweenStops'][number][number]) {
+  return match(stopTime)
     .with({ __typename: 'StopTimeArrivalInfo' }, stopTime => ({
       uid: stopTime.uid,
       departure: stopTime.a_departure,
@@ -45,17 +46,25 @@ function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[
       headsign: stopTime.headsign,
     }))
     .run()
+}
 
-  const routeName = stopTime.route.longName!
-  const routeIds = routeName.includes('：') ? routeName.split('：')[0].split('/') : [stopTime.headsign.slice(0, 4)]
+function transform(transit: ReturnType<typeof useTimetableForBetweenStopsQuery>[0]['data']['timetableForBetweenStops'][number]) {
+  const fromStopTime = stopTimeTransform(transit[0])
+  const toStopTime = stopTimeTransform(transit[1])
+
+  const routeName = fromStopTime.route.longName!
+  const routeIds = routeName.includes('：') ? routeName.split('：')[0].split('/') : [fromStopTime.headsign.slice(0, 4)]
+
+  const moveTimeSec = timeStringToSeconds(toStopTime.departure.time) - timeStringToSeconds(fromStopTime.departure.time)
 
   return {
-    uid: stopTime.uid,
+    uid: fromStopTime.uid,
     departure: {
-      hour: Number(stopTime.departure.time.split(':')[0]),
-      minute: Number(stopTime.departure.time.split(':')[1])
+      hour: Number(fromStopTime.departure.time.split(':')[0]),
+      minute: Number(fromStopTime.departure.time.split(':')[1])
     },
-    routeIds: routeIds
+    routeIds: routeIds,
+    moveTimeSec: moveTimeSec,
   }
 }
 
@@ -124,9 +133,9 @@ export function TimetableTable(props: {
     if (!monday.data || !saturday.data || !sunday.data) return null
 
     const data = [
-      timetableArray((monday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
-      timetableArray((saturday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
-      timetableArray((sunday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit[0]))) as TimeTableData[],
+      timetableArray((monday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
+      timetableArray((saturday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
+      timetableArray((sunday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
     ]
 
     let minHour = 23
@@ -165,29 +174,22 @@ export function TimetableTable(props: {
     return result
   }, [monday.data, saturday.data, sunday.data])
 
-  const moveTime = useMemo(() => {
+  const moveCenterTimeSec = useMemo(() => {
     if (!monday.data || !saturday.data || !sunday.data) return null
 
-    let moveMinSeconds = Number.MAX_SAFE_INTEGER;
-    let moveMaxSeconds = 0;
-    [
-      ...(monday.data?.timetableForBetweenStops ?? []),
-      ...(saturday.data?.timetableForBetweenStops ?? []),
-      ...(sunday.data?.timetableForBetweenStops ?? [])
-    ].forEach(([from, to]) => {
-      const fromData = transform(from)
-      const toData = transform(to)
+    const moveCenterTimes =
+      [
+        ...(monday.data?.timetableForBetweenStops ?? []),
+        ...(saturday.data?.timetableForBetweenStops ?? []),
+        ...(sunday.data?.timetableForBetweenStops ?? [])
+      ].map((transit) => transform(transit).moveTimeSec).sort((a, b) => a - b)
 
-      const moveTime = timeStringToSeconds(`${toData.departure.hour}:${toData.departure.minute}:00`) - timeStringToSeconds(`${fromData.departure.hour}:${fromData.departure.minute}:00`)
-      if (moveTime < 0) debugger
-      if (moveTime < moveMinSeconds) moveMinSeconds = moveTime
-      if (moveMaxSeconds < moveTime) moveMaxSeconds = moveTime
-    })
-    console.log(`乗車時間 約${moveMinSeconds / 60}分〜約${moveMaxSeconds / 60}分`)
+    const half = Math.floor(moveCenterTimes.length / 2);
 
-    return {
-      min: moveMinSeconds,
-      max: moveMaxSeconds
+    if (moveCenterTimes.length % 2) {
+      return moveCenterTimes[half];
+    } else {
+      return (moveCenterTimes[half - 1] + moveCenterTimes[half]) / 2;
     }
   }, [monday.data, saturday.data, sunday.data])
 
@@ -211,7 +213,7 @@ export function TimetableTable(props: {
     <div className='timetable'>
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
-        <div className='timetable_header_description'>所要 <span className='timetable_header_description_minutes'>{moveTime.min / 60}～{moveTime.max / 60}</span> 分（交通状況などにより前後します）</div>
+        <div className='timetable_header_description'>所要　約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分前後（交通状況などにより前後します）</div>
       </div>
       <div style={{
         width: '100%',
@@ -240,13 +242,22 @@ export function TimetableTable(props: {
               <div className="minutes_group">
                 {timetable.map((minutes, i) => {
                   const dayName = i === 0 ? 'weekday' : i === 1 ? 'saturday' : 'sunday'
+
                   return <div className={`minutes ${dayName} ${dayName}_${hourIndex % 2}`}>
-                    {minutes.map((minute) =>
-                      <div key={minute.uid} className="minute_wrap">
-                        <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
-                        <div className="route_id"><div style={{ fontSize: '3pt' }}>{minute.routeIds.join('/')}</div></div>
-                      </div>
-                    )}
+                    {minutes.map((minute) => {
+                      // 中央値×2.0以上 AND 中央値+20以上 → 除外　…桜町→市役所で52分などは除外される
+                      if (moveCenterTimeSec * 2.0 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 20 <= minute.moveTimeSec) return
+
+                      // 中央値×1.5以上 AND 中央値+10以上 → 色づけ　…中央病院、健軍・県庁周りが色づけ
+                      const color = moveCenterTimeSec * 1.5 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 10 <= minute.moveTimeSec ? 'gray' : ''
+
+                      return (
+                        <div key={minute.uid} className={`minute_wrap ${color}`}>
+                          <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
+                          <div className="route_id"><div style={{ fontSize: '3pt' }}>{minute.routeIds.join('/')}</div></div>
+                        </div>
+                      )
+                    })}
                   </div>
                 })}
               </div>
