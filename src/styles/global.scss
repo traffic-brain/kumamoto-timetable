@@ -4,7 +4,7 @@
 
 .controller {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 5px;
   grid-row-gap: 6px;
