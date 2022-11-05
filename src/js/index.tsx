@@ -61,6 +61,7 @@ function App() {
       },
     }
   })
+  const fromStops = useMemo(() => (fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) })), [fromNormalizedStops.data])
   const [toNormalizedStops] = useNormalizedStopsQuery({
     variables: {
       where: {
@@ -74,6 +75,7 @@ function App() {
       },
     }
   })
+  const toStops = useMemo(() => (toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) })), [toNormalizedStops.data])
 
   useEffect(() => {
     if (!fromNormalizedStops.data || !toNormalizedStops.data || userInputted) return
@@ -106,8 +108,9 @@ function App() {
           className='fromName'
           filterOption={null}
           defaultInputValue={fromSearchName}
-          options={(fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-          onInputChange={v => {
+          options={fromStops}
+          onInputChange={(v, actionMeta) => {
+            if (['input-change', 'set-value'].includes(actionMeta.action) === false) return
             setUserInputted(true)
             setFromSearchName(v)
             setSelectedFromKey(null)
@@ -123,15 +126,16 @@ function App() {
           className='toName'
           filterOption={null}
           defaultInputValue={toSearchName}
-          options={(toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-          onInputChange={v => {
+          options={toStops}
+          onInputChange={(v, actionMeta) => {
+            if (['input-change', 'set-value'].includes(actionMeta.action) === false) return
             setUserInputted(true)
             setToSearchName(v)
             setSelectedToKey(null)
           }}
           onChange={(selectedOption) => {
             setUserInputted(true)
-            setToSearchName(selectedOption.label)
+            setFromSearchName(selectedOption.label)
             setSelectedToKey(selectedOption)
           }}
           placeholder='停車地'
