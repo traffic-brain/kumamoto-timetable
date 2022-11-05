@@ -108,7 +108,7 @@ export function TimetableTable(props: {
 
   useEffect(() => {
     propsLastChangedAt.current = new Date().valueOf();
-  }, [props]);
+  }, [props.fromStop.label, props.toStop.label]);
 
   const [monday] = useTimetableForBetweenStopsQuery({
     variables: {
@@ -204,13 +204,14 @@ export function TimetableTable(props: {
 
   useEffect(() => {
     timetableLastChangedAt.current = new Date().valueOf();
-  }, [timetables]);
+  }, [timetables, moveCenterTimeSec]);
 
-  if (timetables === null || timetableLastChangedAt.current < propsLastChangedAt.current) return (
-    <div>
-      時刻表を生成中です... しばらくお待ち下さい
-    </div>
-  )
+  if (timetables === null || timetableLastChangedAt.current < propsLastChangedAt.current)
+    return (
+      <div>
+        時刻表を生成中です... しばらくお待ち下さい
+      </div>
+    )
 
   const url = new URL(location.href);
   url.searchParams.set('fromName', props.fromStop.label)
@@ -273,11 +274,11 @@ export function TimetableTable(props: {
                       if (moveCenterTimeSec * 2.0 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 20 <= minute.moveTimeSec) return
 
                       // 中央値×1.5以上 AND 中央値+10以上 → 色づけ　…中央病院、健軍・県庁周りが色づけ
-                      const color = moveCenterTimeSec * 1.5 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 10 <= minute.moveTimeSec ? 'gray' : ''
+                      const minute_style = moveCenterTimeSec * 1.5 <= minute.moveTimeSec && moveCenterTimeSec + 60 * 10 <= minute.moveTimeSec ? 'long_time' : ''
 
                       return (
-                        <div key={minute.uid} className={`minute_wrap ${color}`}>
-                          <div className="minute">{String(minute.departure.minute).padStart(2, '0')}</div>
+                        <div key={minute.uid} className="minute_wrap">
+                          <div className={`minute ${minute_style}`}>{String(minute.departure.minute).padStart(2, '0')}</div>
                           <div className="route_id"><div style={{ fontSize: '3pt' }}>{minute.routeIds.join('/')}</div></div>
                         </div>
                       )
