@@ -135,7 +135,7 @@ function App() {
           }}
           onChange={(selectedOption) => {
             setUserInputted(true)
-            setFromSearchName(selectedOption.label)
+            setToSearchName(selectedOption.label)
             setSelectedToKey(selectedOption)
           }}
           placeholder='停車地'
