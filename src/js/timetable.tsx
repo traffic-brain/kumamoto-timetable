@@ -159,7 +159,7 @@ export function TimetableTable(props: {
 
       const minHourDiff = timetable[0][0] - minHour
       for (let i = 0; i < minHourDiff; i++) {
-        timetable.unshift([timetable[0][0] - i - 1, []])
+        timetable.unshift([timetable[0][0] - 1, []])
       }
     })
 
@@ -170,7 +170,7 @@ export function TimetableTable(props: {
     days.forEach(timetable => {
       const maxHourDiff = maxHour - timetable[timetable.length - 1][0]
       for (let i = 0; i < maxHourDiff; i++) {
-        timetable.push([timetable[timetable.length - 1][0] + i + 1, []])
+        timetable.push([timetable[timetable.length - 1][0] + 1, []])
       }
     })
 
