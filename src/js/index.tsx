@@ -20,10 +20,12 @@ function App() {
     content: () => componentRef.current,
   });
 
-  const [fromSearchName, setFromSearchName] = useState('')
+  const [userInputted, setUserInputted] = useState<boolean>(false)
+
+  const [fromSearchName, setFromSearchName] = useState(new URL(location.href).searchParams.get('fromName') ?? '')
   const [selectedFrom, setSelectedFromKey] = useState<{ label: string; value: string[] } | null>(null)
 
-  const [toSearchName, setToSearchName] = useState('')
+  const [toSearchName, setToSearchName] = useState(new URL(location.href).searchParams.get('toName') ?? '')
   const [selectedTo, setSelectedToKey] = useState<{ label: string; value: string[] } | null>(null)
 
   const [remotes] = useRemotesQuery({
@@ -73,15 +75,46 @@ function App() {
     }
   })
 
+  useEffect(() => {
+    if (!fromNormalizedStops.data || !toNormalizedStops.data || userInputted) return
+
+    if (fromNormalizedStops.data.normalizedStops.length === 1) {
+      const stop = fromNormalizedStops.data.normalizedStops[0]
+      setFromSearchName(stop.stops[0].name)
+      setUserInputted(true)
+      setSelectedFromKey({
+        label: stop.stops[0].name,
+        value: stop.stops.map(s => s.uid)
+      })
+    }
+
+    if (toNormalizedStops.data.normalizedStops.length === 1) {
+      const stop = toNormalizedStops.data.normalizedStops[0]
+      setToSearchName(stop.stops[0].name)
+      setUserInputted(true)
+      setSelectedToKey({
+        label: stop.stops[0].name,
+        value: stop.stops.map(s => s.uid)
+      })
+    }
+  }, [fromNormalizedStops.data, toNormalizedStops.data])
+
   return (
     <>
       <div className='controller'>
         <Select
           className='fromName'
           filterOption={null}
+          defaultInputValue={fromSearchName}
           options={(fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-          onInputChange={v => setFromSearchName(v)}
+          onInputChange={v => {
+            setUserInputted(true)
+            setFromSearchName(v)
+            setSelectedFromKey(null)
+          }}
           onChange={(selectedOption) => {
+            setUserInputted(true)
+            setFromSearchName(selectedOption.label)
             setSelectedFromKey(selectedOption)
           }}
           placeholder='出発地'
@@ -89,9 +122,16 @@ function App() {
         <Select
           className='toName'
           filterOption={null}
+          defaultInputValue={toSearchName}
           options={(toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) }))}
-          onInputChange={v => setToSearchName(v)}
+          onInputChange={v => {
+            setUserInputted(true)
+            setToSearchName(v)
+            setSelectedToKey(null)
+          }}
           onChange={(selectedOption) => {
+            setUserInputted(true)
+            setToSearchName(selectedOption.label)
             setSelectedToKey(selectedOption)
           }}
           placeholder='停車地'

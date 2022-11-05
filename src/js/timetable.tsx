@@ -1,9 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { useMemo } from "react";
+import QRCode from "react-qr-code";
 import { match } from 'ts-pattern'
 
 import { useTimetableForBetweenStopsQuery } from "../graphql/generated/graphql";
 import { timeStringToSeconds } from "./utils";
+
+
+function isNullable(v: unknown) {
+  return v === undefined || v === null
+}
 
 function nextDay(x: 0 | 1 | 2 | 3 | 4 | 5 | 6) {
   var now = new Date();
@@ -130,52 +136,55 @@ export function TimetableTable(props: {
   })
 
   const timetables = useMemo(() => {
-    if (!monday.data || !saturday.data || !sunday.data) return null
+    if (isNullable(monday.data) || isNullable(saturday.data) || isNullable(sunday.data)) return null
+    if (monday.data.timetableForBetweenStops.length === 0 && saturday.data.timetableForBetweenStops.length === 0 && sunday.data.timetableForBetweenStops.length === 0) return []
 
-    const data = [
+    const days = [
       timetableArray((monday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
       timetableArray((saturday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
       timetableArray((sunday.data?.timetableForBetweenStops ?? []).map((transit) => transform(transit))) as TimeTableData[],
     ]
 
     let minHour = 23
-    data.forEach(data => {
-      if (data.length === 0) return
-      if (data[0][0] < minHour) minHour = data[0][0]
+    days.forEach(timetable => {
+      if (timetable.length === 0) return
+      if (timetable[0][0] < minHour) minHour = timetable[0][0]
     })
-    data.forEach(data => {
-      if (data.length === 0) return
+    days.forEach(timetable => {
+      if (timetable.length === 0) {
+        timetable.unshift([minHour, []])
 
-      const minHourDiff = data[0][0] - minHour
+        return
+      }
+
+      const minHourDiff = timetable[0][0] - minHour
       for (let i = 0; i < minHourDiff; i++) {
-        data.unshift([data[0][0] - i - 1, []])
+        timetable.unshift([timetable[0][0] - i - 1, []])
       }
     })
 
     let maxHour = 0
-    data.forEach(data => {
-      if (data.length === 0) return
-      if (maxHour < data[data.length - 1][0]) maxHour = data[data.length - 1][0]
+    days.forEach(timetable => {
+      if (maxHour < timetable[timetable.length - 1][0]) maxHour = timetable[timetable.length - 1][0]
     })
-    data.forEach(data => {
-      if (data.length === 0) return
-
-      const maxHourDiff = maxHour - data[data.length - 1][0]
+    days.forEach(timetable => {
+      const maxHourDiff = maxHour - timetable[timetable.length - 1][0]
       for (let i = 0; i < maxHourDiff; i++) {
-        data.push([data[data.length - 1][0] + i + 1, []])
+        timetable.push([timetable[timetable.length - 1][0] + i + 1, []])
       }
     })
-    if (data[0].length !== data[1].length || data[1].length !== data[2].length) return []
+
+    if (days[0].length !== days[1].length || days[1].length !== days[2].length) return []
 
     const result: [number, [TimeTableData[1], TimeTableData[1], TimeTableData[1]]][] = []
-    data[0].forEach((_, i) => [
-      result.push([data[0][i][0], [data[0][i][1], data[1][i][1], data[2][i][1]]])
+    days[0].forEach((_, i) => [
+      result.push([days[0][i][0], [days[0][i][1], days[1][i][1], days[2][i][1]]])
     ])
     return result
   }, [monday.data, saturday.data, sunday.data])
 
   const moveCenterTimeSec = useMemo(() => {
-    if (!monday.data || !saturday.data || !sunday.data) return null
+    if (isNullable(monday.data) || isNullable(saturday.data) || isNullable(sunday.data)) return null
 
     const moveCenterTimes =
       [
@@ -203,6 +212,11 @@ export function TimetableTable(props: {
     </div>
   )
 
+  const url = new URL(location.href);
+  url.searchParams.set('fromName', props.fromStop.label)
+  url.searchParams.set('toName', props.toStop.label)
+  history.replaceState(null, null, url.href)
+
   if (timetables.length === 0) return (
     <div>
       この停留所区間は運行しておりません
@@ -214,6 +228,16 @@ export function TimetableTable(props: {
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
         <div className='timetable_header_description'>所要　約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分前後（交通状況などにより前後します）</div>
+        <div className="timetable_header_qr">
+          <div style={{
+            position: 'relative',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }} >
+            <QRCode level="L" size={85} value={location.href} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
+          </div>
+        </div>
       </div>
       <div style={{
         width: '100%',

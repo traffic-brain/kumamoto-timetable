@@ -1,26 +1,49 @@
 .timetable {
   .timetable_header {
-    padding: 3pt 9pt;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 
-    display: flex;
     justify-content: space-between;
-
-    background-color: #354f9b;
 
     color: #fff;
 
     .timetable_header_route_name {
+      grid-area: 1 / 1 / 2 / 2;
+
+      background-color: #354f9b;
+
+      padding-top: 3pt;
+      padding-left: 9pt;
+
       font-size: 21pt;
       font-weight: bold;
     }
 
     .timetable_header_description {
+      grid-area: 2 / 1 / 3 / 2;
+
+      background-color: #354f9b;
+
+      padding-left: 9pt;
+      padding-bottom: 3pt;
+
       line-height: 260%;
 
       .timetable_header_description_minutes {
-        font-weight:bold;
-        font-size:16pt;
+        font-weight: bold;
+        font-size: 16pt;
       }
+    }
+
+    .timetable_header_qr {
+      grid-area: 1 / 2 / 3 / 3;
+
+      position: relative;
+
+      background-color: #ffffff;
     }
   }
 
