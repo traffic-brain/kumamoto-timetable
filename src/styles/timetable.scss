@@ -2,7 +2,7 @@
   .timetable_header {
     display: grid;
     grid-template-columns: 1fr 100px;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 
@@ -29,8 +29,6 @@
 
       padding-left: 9pt;
       padding-bottom: 3pt;
-
-      line-height: 260%;
 
       .timetable_header_description_minutes {
         font-weight: bold;

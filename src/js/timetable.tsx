@@ -228,7 +228,7 @@ export function TimetableTable(props: {
     <div className='timetable'>
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
-        <div className='timetable_header_description'>所要　約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分前後（交通状況などにより前後します）</div>
+        <div className='timetable_header_description'>所要　約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分前後（経路・時間帯・交通状況により前後します）{20 < moveCenterTimeSec / 60 && (<>< br /> <span>※所要時間が長い便です</span></>)}</div>
         <div className="timetable_header_qr">
           <div style={{
             position: 'relative',
@@ -290,6 +290,6 @@ export function TimetableTable(props: {
           </>)}
         </div>
       </div>
-    </div>
+    </div >
   )
 }
