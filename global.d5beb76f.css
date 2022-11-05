@@ -1,2 +1,0 @@
-*{box-sizing:border-box}.controller{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:repeat(2,1fr);grid-column-gap:5px;grid-row-gap:6px}.controller .fromName{grid-area:1/1/2/2}.controller .toName{grid-area:2/1/3/2}.controller .print{grid-area:1/2/3/3}.gray{color:#685e5e}@page{margin:6mm}
-/*# sourceMappingURL=global.d5beb76f.css.map */
