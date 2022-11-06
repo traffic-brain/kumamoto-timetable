@@ -15,10 +15,10 @@
   "dependencies": {
     "@graphql-codegen/typescript-urql": "^3.7.1",
     "graphql": "^16.6.0",
+    "next-qrcode": "^2.2.2",
     "parcel-bundler": "^1.12.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-qr-code": "^2.0.8",
     "react-select": "^5.5.0",
     "react-to-print": "^2.14.7",
     "ts-pattern": "^4.0.5",

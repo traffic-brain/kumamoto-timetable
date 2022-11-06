@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useMemo } from "react";
-import QRCode from "react-qr-code";
+import { useQRCode } from 'next-qrcode';
 import { match } from 'ts-pattern'
 
 import { useTimetableForBetweenStopsQuery } from "../graphql/generated/graphql";
@@ -100,9 +100,11 @@ function timetableArray(rows: ReturnType<typeof transform>[]) {
 }
 
 export function TimetableTable(props: {
-  fromStop: { label: string, uids: string[]; }
-  toStop: { label: string, uids: string[]; }
+  fromStop: { label: string, key: string, uids: string[]; }
+  toStop: { label: string, key: string, uids: string[]; }
 }) {
+  const { Canvas } = useQRCode();
+
   const propsLastChangedAt = useRef<number>(0);
   const timetableLastChangedAt = useRef<number>(0);
 
@@ -230,14 +232,21 @@ export function TimetableTable(props: {
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
         <div className='timetable_header_description'>所要約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分（経路・時間帯・交通状況により前後します）<>< br /><span>下線細字：所要時間が長い便です</span></></div>
         <div className="timetable_header_qr">
-          <div style={{
-            position: 'relative',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-          }} >
-            <QRCode level="L" size={85} value={location.href} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
-          </div>
+          <Canvas
+            text={`https://km.bus-vision.jp/kumamoto/view/approach.html?stopCdFrom=${props.fromStop.key}&stopCdTo=${props.toStop.key}`}
+            options={{
+              type: 'image/png',
+              quality: 1,
+              level: 'M',
+              margin: 4,
+              scale: 2,
+              width: 106,
+              color: {
+                dark: '#000000FF',
+                light: '#FFFFFFFF',
+              },
+            }}
+          />
         </div>
       </div>
       <div style={{

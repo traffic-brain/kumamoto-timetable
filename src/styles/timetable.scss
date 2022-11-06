@@ -1,8 +1,8 @@
 .timetable {
   .timetable_header {
     display: grid;
-    grid-template-columns: 1fr 100px;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 
@@ -39,9 +39,7 @@
     .timetable_header_qr {
       grid-area: 1 / 2 / 3 / 3;
 
-      position: relative;
-
-      background-color: #ffffff;
+      display: inherit;
     }
   }
 

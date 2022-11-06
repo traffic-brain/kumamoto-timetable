@@ -23,10 +23,10 @@ function App() {
   const [userInputted, setUserInputted] = useState<boolean>(false)
 
   const [fromSearchName, setFromSearchName] = useState(new URL(location.href).searchParams.get('fromName') ?? '')
-  const [selectedFrom, setSelectedFromKey] = useState<{ label: string; value: string[] } | null>(null)
+  const [selectedFrom, setSelectedFromKey] = useState<{ label: string; key: string; value: string[] } | null>(null)
 
   const [toSearchName, setToSearchName] = useState(new URL(location.href).searchParams.get('toName') ?? '')
-  const [selectedTo, setSelectedToKey] = useState<{ label: string; value: string[] } | null>(null)
+  const [selectedTo, setSelectedToKey] = useState<{ label: string; key: string; value: string[] } | null>(null)
 
   const [remotes] = useRemotesQuery({
     variables: {
@@ -61,7 +61,7 @@ function App() {
       },
     }
   })
-  const fromStops = useMemo(() => (fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) })), [fromNormalizedStops.data])
+  const fromStops = useMemo(() => (fromNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, key: stop.key, value: stop.stops.map(s => s.uid) })), [fromNormalizedStops.data])
   const [toNormalizedStops] = useNormalizedStopsQuery({
     variables: {
       where: {
@@ -75,7 +75,7 @@ function App() {
       },
     }
   })
-  const toStops = useMemo(() => (toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, value: stop.stops.map(s => s.uid) })), [toNormalizedStops.data])
+  const toStops = useMemo(() => (toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, key: stop.key, value: stop.stops.map(s => s.uid) })), [toNormalizedStops.data])
 
   useEffect(() => {
     if (!fromNormalizedStops.data || !toNormalizedStops.data || userInputted) return
@@ -86,6 +86,7 @@ function App() {
       setUserInputted(true)
       setSelectedFromKey({
         label: stop.stops[0].name,
+        key: stop.key,
         value: stop.stops.map(s => s.uid)
       })
     }
@@ -96,6 +97,7 @@ function App() {
       setUserInputted(true)
       setSelectedToKey({
         label: stop.stops[0].name,
+        key: stop.key,
         value: stop.stops.map(s => s.uid)
       })
     }
@@ -145,7 +147,7 @@ function App() {
       {
         selectedFrom && selectedTo &&
         <div ref={componentRef} >
-          <TimetableTable fromStop={{ label: selectedFrom.label, uids: selectedFrom.value }} toStop={{ label: selectedTo.label, uids: selectedTo.value }} />
+          <TimetableTable fromStop={{ label: selectedFrom.label, key: selectedFrom.key, uids: selectedFrom.value }} toStop={{ label: selectedTo.label, key: selectedTo.key, uids: selectedTo.value }} />
         </div>
       }
     </>
