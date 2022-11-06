@@ -241,7 +241,6 @@ export function TimetableTable(props: {
               level: 'M',
               margin: 4,
               scale: 2,
-              width: 106,
               color: {
                 dark: '#000000FF',
                 light: '#FFFFFFFF',
