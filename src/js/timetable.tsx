@@ -231,6 +231,7 @@ export function TimetableTable(props: {
       <div className='timetable_header'>
         <div className='timetable_header_route_name'>{props.fromStop.label} → {props.toStop.label}</div>
         <div className='timetable_header_description'>所要約 <span className='timetable_header_description_minutes'>{moveCenterTimeSec / 60}</span> 分（経路・時間帯・交通状況により前後します）<>< br /><span>下線細字：所要時間が長い便です</span></></div>
+        <div className='timetable_header_qr_description'><div className="center">リアル<br />タイム<br />情報▶</div></div>
         <div className="timetable_header_qr">
           <Canvas
             text={`https://km.bus-vision.jp/kumamoto/view/approach.html?stopCdFrom=${props.fromStop.key}&stopCdTo=${props.toStop.key}`}
