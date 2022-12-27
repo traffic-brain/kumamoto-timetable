@@ -78,9 +78,9 @@ function App() {
   const toStops = useMemo(() => (toNormalizedStops.data?.normalizedStops ?? []).map((stop) => ({ label: stop.stops[0].name, key: stop.key, value: stop.stops.map(s => s.uid) })), [toNormalizedStops.data])
 
   useEffect(() => {
-    if (!fromNormalizedStops.data || !toNormalizedStops.data || userInputted) return
+    if (!fromSearchName || !toSearchName || !fromNormalizedStops.data || !toNormalizedStops.data || userInputted) return
 
-    if (fromNormalizedStops.data.normalizedStops.length === 1) {
+    if (0 < fromNormalizedStops.data.normalizedStops.length) {
       const stop = fromNormalizedStops.data.normalizedStops[0]
       setFromSearchName(stop.stops[0].name)
       setUserInputted(true)
@@ -91,7 +91,7 @@ function App() {
       })
     }
 
-    if (toNormalizedStops.data.normalizedStops.length === 1) {
+    if (0 < toNormalizedStops.data.normalizedStops.length) {
       const stop = toNormalizedStops.data.normalizedStops[0]
       setToSearchName(stop.stops[0].name)
       setUserInputted(true)
