@@ -28,6 +28,14 @@ function App() {
   const [toSearchName, setToSearchName] = useState(new URL(location.href).searchParams.get('toName') ?? '')
   const [selectedTo, setSelectedToKey] = useState<{ label: string; key: string; value: string[] } | null>(null)
 
+  const handleExchange = useCallback(() => {
+    setUserInputted(true)
+    setFromSearchName(toSearchName)
+    setSelectedFromKey(selectedTo)
+    setToSearchName(fromSearchName)
+    setSelectedToKey(selectedFrom)
+  }, [fromSearchName, selectedFrom, toSearchName, selectedTo])
+
   const [remotes] = useRemotesQuery({
     variables: {
       where: {
@@ -46,7 +54,7 @@ function App() {
       }
     }
   })
-  const remoteUids = useMemo(() => remotes.data?.remotes.edges.map(remote => remote.versions.edges[0].uid) ?? [], [remotes.data])
+  const remoteUids = useMemo(() => remotes.data?.remotes.edges.map(remote => remote.versions.edges[0]?.uid).filter(e => e !== undefined) ?? [], [remotes.data])
 
   const [fromNormalizedStops] = useNormalizedStopsQuery({
     variables: {
@@ -109,8 +117,8 @@ function App() {
         <Select
           className='fromName'
           filterOption={null}
-          defaultInputValue={fromSearchName}
           options={fromStops}
+          value={selectedFrom}
           onInputChange={(v, actionMeta) => {
             if (['input-change', 'set-value'].includes(actionMeta.action) === false) return
             setUserInputted(true)
@@ -127,8 +135,8 @@ function App() {
         <Select
           className='toName'
           filterOption={null}
-          defaultInputValue={toSearchName}
           options={toStops}
+          value={selectedTo}
           onInputChange={(v, actionMeta) => {
             if (['input-change', 'set-value'].includes(actionMeta.action) === false) return
             setUserInputted(true)
@@ -142,6 +150,7 @@ function App() {
           }}
           placeholder='停車地'
         />
+        <button className='exchange' onClick={handleExchange}>⇅</button>
         <button className='print' disabled={selectedFrom === null || selectedTo === null} onClick={handlePrint}>印刷する</button>
       </div>
       {

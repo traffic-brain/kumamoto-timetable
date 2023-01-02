@@ -19,7 +19,7 @@
     "parcel-bundler": "^1.12.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-select": "^5.5.0",
+    "react-select": "^5.7.0",
     "react-to-print": "^2.14.7",
     "ts-pattern": "^4.0.5",
     "urql": "^3.0.3"
