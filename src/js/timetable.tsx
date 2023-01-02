@@ -268,6 +268,8 @@ export function TimetableTable(props: {
                 <span className="day_name">日祝</span><span className="day">（{generateDateFormat(nextDay(0), '/')}）</span>
               </div>
             </div>
+
+            <div className="table_header_hour_right">時</div>
           </div>
           {timetables.map(([hour, timetable], hourIndex) => <>
             <div className="hour_group">
@@ -294,6 +296,12 @@ export function TimetableTable(props: {
                     })}
                   </div>
                 })}
+
+                <div className="hour_right">
+                  <div className="center">
+                    {String(hour).padStart(2, '0')}
+                  </div>
+                </div>
               </div>
             </div>
           </>)}

@@ -2,7 +2,7 @@ $border_size: 1.2pt;
 $hourSize: 16pt;
 $hour_width: 30pt;
 
-$weekday_width: 38.10%;
+$weekday_width: 38.1%;
 $saturday_width: 33.33%;
 $sunday_width: 28.57%;
 
@@ -18,7 +18,7 @@ $sunday_width: 28.57%;
     border-bottom: $border_size solid #000;
 
     .table_header_hour {
-      padding: 0 6pt;
+      padding: 0 7pt;
       width: $hour_width;
       font-size: $hourSize;
     }
@@ -53,6 +53,14 @@ $sunday_width: 28.57%;
         }
       }
     }
+
+    .table_header_hour_right {
+      border-left: $border_size solid #000;
+
+      padding: 0 7pt;
+      width: $hour_width;
+      font-size: $hourSize;
+    }
   }
 
   .hour_group {
@@ -71,6 +79,21 @@ $sunday_width: 28.57%;
       font-size: $hourSize;
       font-weight: bold;
       width: $hour_width;
+    }
+
+    .hour_right {
+      border-left: $border_size solid #000;
+      
+      padding: 0 4pt;
+      font-size: $hourSize;
+      font-weight: bold;
+      width: $hour_width;
+
+      .center {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);;
+      }
     }
 
     .minutes_group {
