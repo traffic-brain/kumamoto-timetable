@@ -1,0 +1,2 @@
+*{box-sizing:border-box}.controller{display:grid;grid-template-columns:200pt 25pt 60pt 1fr;grid-template-rows:1fr 1fr;grid-column-gap:5px;grid-row-gap:6px}.controller .fromName{grid-area:1/1/2/2}.controller .toName{grid-area:2/1/3/2}.controller .exchange{grid-area:1/2/3/3}.controller .print{grid-area:1/3/3/3}@page{margin:5mm}
+/*# sourceMappingURL=global.78c6213a.css.map */
