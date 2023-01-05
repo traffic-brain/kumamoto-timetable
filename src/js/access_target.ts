@@ -1,14 +1,14 @@
 const accessTargets = {
   dev: {
     medas: {
-      url: 'http://localhost:3000/v1/graphql',
-      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiI2VDRvZXFZLTBma24xS2NrYm1ORDgiLCJ0b2tlbiI6InUwSXNBTURuakJqMl80R2ltWnFTVCIsImlhdCI6MTY3MjY2MTc5NX0.Xk4auSHuLuN5YpAKH1qIFGlIm4kCGCMfiVhfHcY0V7U',
+      url: 'http://localhost:3001/v1/graphql',
+      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1aWQiOiJTUE9zRUJYT2hxVlo5RHoxUkdISl8iLCJ0b2tlbiI6InZ4TjRqYVloNUN5VFpkRGd5SVUzSCIsImlhdCI6MTY3MjgzNzA0Mn0.PQeJlD0cW_8ze4LfqnImHTKlCKnvpgBOH6KOiqXhPhQ',
     },
     remoteUids: [
-      'nQnmRWWnFBTpUK102mFWK',
-      'VQZ4LQIHfxpDnVaRzmtnf',
-      'PYNnU1At5VNsGDN5bU_JR',
-      'hB3vGaDFcXqL7A3t0ZASK',
+      'cHVaAq578jSxIj6nQli4e',
+      'mJx0IOk2t5QvAPrcjXrXr',
+      'WTxihaA-kKBkTf2HaK3zc',
+      'ygXOrQkTVqhayh9-hALqH',
     ]
   },
   prod: {
@@ -25,4 +25,4 @@ const accessTargets = {
   }
 }
 
-export const accessTarget = accessTargets['dev']
+export const accessTarget = accessTargets['prod']
